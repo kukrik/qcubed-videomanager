@@ -1,0 +1,59 @@
+.switch label input[type=checkbox] {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.switch label .web-vauu,
+.switch label .web-vauu:after {
+  content: "";
+  display: inline-block;
+}
+.switch label .web-vauu {
+  position: relative;
+  width: 40px;
+  height: 15px;
+  border: 1px solid #337ab7;
+  border-radius: 15px;
+  transition: background 0.3s ease;
+  margin: 0 16px;
+  vertical-align: middle;
+}
+.switch label .web-vauu,
+.switch label .web-vauu:after {
+  content: "";
+  display: inline-block;
+}
+.switch label {
+  cursor: pointer;
+  margin-left: 15px;
+  margin-right: 15px;
+  padding: 10px 0;
+}
+.switch label .web-vauu:after {
+  position: absolute;
+  width: 21px;
+  height: 21px;
+  background-color: #337ab7;
+  border-radius: 21px;
+  left: -5px;
+  top: -4px;
+  transition: left 0.3s ease, background 0.3s ease, box-shadow 0.1s ease;
+}
+.switch label input[type=checkbox]:checked + .web-vauu:after {
+  background-color: #f35b1c;
+}
+.switch label input[type=checkbox]:checked + .web-vauu:after {
+  left: 24px;
+}
+.switch label input[type=checkbox]:checked + .web-vauu {
+  border-color: #66afe9;
+  outline: 0;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, .6);
+  box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, .6);
+}
+
+/** Added necessary changes to popupCroppie **/
+div .cr-boundary {max-width: 350px;max-height: 350px;min-width: 350px;min-height: 350px;}
+div .cr-overlay {max-width: 330px;max-height: 330px;}
+.croppie-container {width: 100%;height: auto;}
+#enable-type {margin-left: 15px; margin-top: -10px; margin-bottom: -10px;}
