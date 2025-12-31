@@ -2,7 +2,6 @@
 
     namespace QCubed\Plugin;
 
-    use QCubed as Q;
     use QCubed\Control\Panel;
     use QCubed\Exception\Caller;
     use QCubed\Exception\InvalidCast;
@@ -63,6 +62,7 @@
          *
          * @return mixed The value of the requested property, or the result of the parent implementation.
          * @throws Caller If the property does not exist and cannot be resolved by the parent method.
+         * @throws \Exception
          */
         public function __get(string $strName): mixed
         {
@@ -92,6 +92,7 @@
          *
          * @throws InvalidCast Thrown if the value cannot be cast to the required type.
          * @throws Caller Thrown if the property does not exist or cannot be set.
+         * @throws \Exception
          */
         public function __set(string $strName, mixed $mixValue): void
         {

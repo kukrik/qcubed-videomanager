@@ -1,6 +1,5 @@
 <?php
     // ADD TO THE BEGINNING OF THE FILE NOW! Before outputting any HTML!
-
     // Cache and freshness check
     header('Cache-Control: no-cache, no-store, must-revalidate'); // No caching allowed
     header('Pragma: no-cache'); // Backward compatibility with older proxies/browsers
@@ -25,23 +24,10 @@
     <?php if (isset($strPageTitle)){ ?><title><?php _p($strPageTitle); ?></title><?php } ?>
 
     <link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,500,600,700&subset=all" rel="stylesheet" type="text/css"/>
-    <link href="<?= QCUBED_PROJECT_CSS_URL ?>/font-awesome.min.css" rel="stylesheet"/>
+    <link href="<?= QCUBED_FONT_AWESOME_CSS ?>" rel="stylesheet"/>
     <link href="../assets/css/awesome-bootstrap-checkbox.css" rel="stylesheet"/>
     <link href="<?= QCUBED_BOOTSTRAP_CSS ?>" rel="stylesheet"/>
-    <link href="../assets/css/jquery.fileupload.css" rel="stylesheet" />
-    <link href="../assets/css/jquery.fileupload-ui.css" rel="stylesheet" />
     <link href="../assets/css/custom-buttons-inputs.css" rel="stylesheet"/>
-    <link href="../assets/css/qcubed.fileinfo.css" rel="stylesheet"/>
-    <link href="../assets/css/qcubed.filemanager.css" rel="stylesheet"/>
-    <link href="../assets/css/qcubed.uploadhandler.css" rel="stylesheet"/>
-    <link href="../assets/css/select2-web-vauu.css" rel="stylesheet" />
     <link href="../assets/css/custom-svg-icons.css" rel="stylesheet" />
-    <link href="../assets/css/vauu-table.css" rel="stylesheet" />
-
-    <link href="../assets/css/croppie.css" rel="stylesheet" />
-    <link href="../assets/css/custom-switch.css" rel="stylesheet" />
-    <link href="../assets/css/select2.css" rel="stylesheet" />
-    <link href="../assets/css/select2-bootstrap.css" rel="stylesheet" />
-    <link href="../assets/css/select2-web-vauu.css" rel="stylesheet" />
 </head>
 <body>

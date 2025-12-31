@@ -1,0 +1,99 @@
+/* https://blog.logrocket.com/guide-image-overlays-css/ */
+
+/* https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_image_transparent_bottom
+
+ https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_blurred_bg
+
+ https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_image_overlay_title !!!!!!
+ */
+
+/* Reset */
+*, *::before, *::after { box-sizing: border-box; }
+/* NB: ära stiili pluginas globaalselt body't, muidu rikud admini teisi vaateid */
+/* body { font-family: Arial, sans-serif; padding: 20px; } */
+
+.video-container {
+    width: 100%;
+    height: 100%;
+}
+
+.choose-video:hover {
+    cursor: pointer;
+}
+
+/* ---------- VIDEO (selected-video) ---------- */
+.selected-video {
+    position: relative; /* overlay ankurdub selle külge */
+    display: block;
+}
+
+/* overlay video peal */
+.selected-overlay {
+    position: absolute;
+    inset: 0;
+    /*top: 0; */
+    /*right: 0; */
+    /*bottom: 0; */
+    /*left: 0;*/
+    background: transparent;
+    transition: background 0.25s ease-in-out;
+    cursor: pointer;
+}
+
+/* hover ainult selected-video peal */
+.selected-video:hover .selected-overlay {
+    background: rgba(0, 0, 0, 0.20);
+}
+
+/* ---------- DELETE (delete-wrapper) ---------- */
+.delete-wrapper {
+    /* soovi korral video alla vahe:
+    margin-top: 8px;
+    */
+}
+
+.delete-overlay {
+    width: 100%;
+    min-height: 44px;
+    background: rgba(0, 0, 0, 0.18);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: #fff;
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; /* X paremale */
+    padding-top: 10px;
+}
+
+.delete-wrapper:hover .delete-overlay {
+    background: rgba(0, 0, 0, 0.30);
+    cursor: pointer;
+}
+
+.overLay-right {
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-items: center;
+}
+
+.files-svg {
+    display: block;
+    width: 40px;
+    height: 40px;
+}
+
+.svg-delete {
+    stroke: #ffffff;
+    stroke-width: 0.15em;
+}
+
+.delete-wrapper:hover .svg-delete {
+    stroke: #ff0000;
+}
+
+.hidden {
+    display: none !important;
+}
