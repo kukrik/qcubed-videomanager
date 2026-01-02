@@ -9,8 +9,6 @@
 
 /* Reset */
 *, *::before, *::after { box-sizing: border-box; }
-/* NB: ära stiili pluginas globaalselt body't, muidu rikud admini teisi vaateid */
-/* body { font-family: Arial, sans-serif; padding: 20px; } */
 
 .video-container {
     width: 100%;
@@ -23,11 +21,11 @@
 
 /* ---------- VIDEO (selected-video) ---------- */
 .selected-video {
-    position: relative; /* overlay ankurdub selle külge */
+    position: relative; /* overlay anchors to it */
     display: block;
 }
 
-/* overlay video peal */
+/* overlay on video */
 .selected-overlay {
     position: absolute;
     inset: 0;
@@ -47,7 +45,7 @@
 
 /* ---------- DELETE (delete-wrapper) ---------- */
 .delete-wrapper {
-    /* soovi korral video alla vahe:
+    /* If you wish, you can download the video below:
     margin-top: 8px;
     */
 }
@@ -64,7 +62,6 @@
     display: flex;
     align-items: center;
     justify-content: flex-end; /* X paremale */
-    padding-top: 10px;
 }
 
 .delete-wrapper:hover .delete-overlay {

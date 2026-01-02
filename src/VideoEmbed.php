@@ -9,6 +9,7 @@
     use QCubed\Exception\Caller;
     use QCubed\Project\Application;
     use QCubed\Type;
+
     /**
      * Class VideoEmbed
      *
@@ -21,18 +22,14 @@
      * @property string $SelectedVideoAlt Default null. The recommendation is to add the following text: "Selected video"
      *
      * @property string $RemoveAssociation Default "Remove association"
-     * @property string $SaveItem
-     * @property array $SaveItems
-     * @property string $DeleteItem
+     * @property array $Items
      *
      * @package QCubed\Plugin
      */
 
     class VideoEmbed extends VideoEmbedGen
     {
-        protected ?string $intSaveItem = null;
-        protected ?array $arySaveItems = null;
-        protected ?string $intDeleteItem = null;
+        protected ?array $strItems  = null;
 
         /** @var string EmptyVideoPath */
         protected string $strEmptyVideoPath = QCUBED_VIDEOMANAGER_ASSETS_URL . "/images/empty-videos-icon.png";
@@ -85,7 +82,7 @@
          */
         protected function getControlHtml(): string
         {
-            $strHtml = _nl('<div class="video-container">');
+            $strHtml = _nl('<div id="' . $this->ControlId . '" class="video-container">');
             $strHtml .= $this->chooseVideoTemplate();
             $strHtml .= $this->selectedVideoTemplate();
             $strHtml .= '</div>';
@@ -138,32 +135,34 @@
             $strHiddenClass = $this->intSelectedVideoId ? '' : ' hidden';
 
             $strHtml .= _nl(_indent(
-                '<div id="' . $this->ControlId . '" class="selected-video' . $strHiddenClass . '" data-id="' . $strDataId . '" data-event="save">',
+                '<div id="' . $this->ControlId . '" class="selected-video' . $strHiddenClass . '" data-id="' . $strDataId . '">',
                 1
             ));
 
-            if ($this->strSelectedVideoEmbed) {
-                $strHtml .= _nl(_indent('<div class="embed-responsive embed-responsive-16by9">', 2));
-                $strHtml .= _nl(_indent(" $this->strSelectedVideoEmbed ", 3));
-                $strHtml .= _nl(_indent('</div>', 2));
+            $strHtml .= _nl(_indent('<div class="embed-responsive embed-responsive-16by9">', 2));
 
-                $strHtml .= _nl(_indent(
-                    '<div class="selected-overlay" data-id="' . $strDataId . '" data-event="edit"></div>',
-                    2
-                ));
+            if ($this->strSelectedVideoEmbed) {
+                $strHtml .= _nl(_indent(" $this->strSelectedVideoEmbed ", 3));
             }
+
+            $strHtml .= _nl(_indent('</div>', 2));
+
+            $strHtml .= _nl(_indent(
+                '<div class="selected-overlay" data-id="' . $strDataId . '" data-event="edit"></div>',
+                2
+            ));
 
             $strHtml .= _nl(_indent('</div>', 1));
 
             $strHtml .= _nl(_indent(
-                '<div class="delete-wrapper' . $strHiddenClass . '" data-id="' . $strDataId . '">',
+                '<div class="delete-wrapper' . $strHiddenClass . '" data-id="' . $strDataId . '" data-event="delete">',
                 1
             ));
             $strHtml .= _nl(_indent(
-                '<div class="delete-overlay" data-id="' . $strDataId . '" data-event="delete">',
+                '<div class="delete-overlay" data-id="' . $strDataId . '">',
                 2
             ));
-            $strHtml .= _nl(_indent('<span class="overLay-right" aria-label="Eemalda seos">', 3));
+            $strHtml .= _nl(_indent('<span class="overLay-right" aria-label="' . t($this->strRemoveAssociation) . '">', 3));
             $strHtml .= _nl(_indent('<svg viewBox="-15 -15 56 56" class="svg-delete files-svg" focusable="false" aria-hidden="true">', 4));
             $strHtml .= _nl(_indent('<path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"></path>', 5));
             $strHtml .= _nl(_indent('</svg>', 4));
@@ -173,52 +172,6 @@
 
             return $strHtml;
         }
-
-
-
-//        protected function selectedVideoTemplate(): string
-//        {
-//            $strHtml = '';
-//
-//            $strDataId = $this->intSelectedVideoId ? (string)$this->intSelectedVideoId : '';
-//            $strHiddenClass = $this->intSelectedVideoId ? '' : ' hidden';
-//
-//            $strHtml .= _nl(_indent(
-//                '<div id="' . $this->ControlId . '" class="selected-video' . $strHiddenClass . '" data-id="' . $strDataId . '" >',
-//                1
-//            ));
-//
-//            if ($this->strSelectedVideoEmbed) {
-//                $strHtml .= _nl(_indent('<div class="embed-responsive embed-responsive-16by9">', 2));
-//                $strHtml .= _nl(_indent(" $this->strSelectedVideoEmbed ", 3));
-//                $strHtml .= _nl(_indent('</div>', 2));
-//
-//                $strHtml .= _nl(_indent(
-//                    '<div class="selected-overlay" data-id="' . $strDataId . '" data-event="edit"></div>',
-//                    2
-//                ));
-//            }
-//
-//            $strHtml .= _nl(_indent('</div>', 1));
-//
-//            $strHtml .= _nl(_indent(
-//                '<div class="delete-wrapper' . $strHiddenClass . '" data-id="' . $strDataId . '">',
-//                1
-//            ));
-//            $strHtml .= _nl(_indent(
-//                '<div class="delete-overlay" data-id="' . $strDataId . '" data-event="delete">',
-//                2
-//            ));
-//            $strHtml .= _nl(_indent('<span class="overLay-right" aria-label="Eemalda seos">', 3));
-//            $strHtml .= _nl(_indent('<svg viewBox="-15 -15 56 56" class="svg-delete files-svg" focusable="false" aria-hidden="true">', 4));
-//            $strHtml .= _nl(_indent('<path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"></path>', 5));
-//            $strHtml .= _nl(_indent('</svg>', 4));
-//            $strHtml .= _nl(_indent('</span>', 3));
-//            $strHtml .= _nl(_indent('</div>', 2));
-//            $strHtml .= _nl(_indent('</div>', 1));
-//
-//            return $strHtml;
-//        }
 
         /**
          * Generates and returns the necessary JavaScript code to manage video-related UI interactions.
@@ -249,12 +202,12 @@ $(document).ready(function() {
         console.log(data);
         var id = data.id;
         var embed = data.embed;
- 
+
         if (id && embed) {
             choose_video.classList.add('hidden');
             selected_video.classList.remove('hidden');
             delete_wrapper.classList.remove('hidden');
-            //embed_wrap.innerHTML = embed;
+            embed_wrap.innerHTML = embed;
             selected_video.setAttribute('data-id', id);
             delete_wrapper.setAttribute('data-id', id);
             delete_overlay.setAttribute('data-id', id);
@@ -262,54 +215,22 @@ $(document).ready(function() {
             choose_video.classList.remove('hidden');
             selected_video.classList.add('hidden');
             delete_wrapper.classList.add('hidden');
-            //embed_wrap.innerHTML = '';
+            embed_wrap.innerHTML = '';
             selected_video.setAttribute('data-id', '');
             delete_wrapper.setAttribute('data-id', '');
             delete_overlay.setAttribute('data-id', '');
         }
 
-        videoSave();
+        videoSave(data);
     }
 
     window.getVideoParams = getVideoParams;
 
-    videoSave = function() {
+    videoSave = function(params) {
         var selected_video = $(".selected-video");
-        selected_video.on("videosave", function(event) {
-            if (selected_video.data('id') !== "") {
-                console.log("videosave event fired, ID=", selected_video.data('id'));
-                qcubed.recordControlModification('$this->ControlId', '_SaveItem', selected_video.data('id'));
-              
-                
-            }
-        });
-
+        qcubed.recordControlModification("$this->ControlId", "_Items", params);
         var VideoSaveEvent = $.Event("videosave");
         selected_video.trigger(VideoSaveEvent);
-    }
-
-    $(".delete-overlay").on("click", function() {
-        choose_video.classList.remove('hidden');
-        selected_video.classList.add('hidden');
-        delete_wrapper.classList.add('hidden');
-        //embed_wrap.innerHTML = '';
-        selected_video.setAttribute('data-id', '');
-        delete_wrapper.setAttribute('data-id', '');
-        delete_overlay.setAttribute('data-id', '');
-
-        videoDelete();
-    });
-
-    videoDelete = function() {
-        var delete_video = $(delete_overlay);
-        delete_video.on("videodelete", function(event) {
-            if (delete_video.data('id') !== "" && delete_video.data('event') === 'delete') {
-                qcubed.recordControlModification('$this->ControlId', '_DeleteItem', delete_video.data('id'));
-            }
-        });
-
-        var VideoDeleteEvent = $.Event("videodelete");
-        delete_video.trigger(VideoDeleteEvent);
     }
 });
 FUNC;
@@ -334,9 +255,7 @@ FUNC;
         public function __get(string $strName): mixed
         {
             switch ($strName) {
-                case 'SaveItem': return $this->intSaveItem;
-                case 'SaveItems': return $this->arySaveItems;
-                case 'DeleteItem': return $this->intDeleteItem;
+                case 'Items': return $this->strItems;
                 case "EmptyVideoPath": return $this->strEmptyVideoPath;
                 case "EmptyVideoAlt": return $this->strEmptyVideoAlt;
                 case 'SelectedVideoId': return $this->intSelectedVideoId;
@@ -374,45 +293,13 @@ FUNC;
         public function __set(string $strName, mixed $mixValue): void
         {
             switch ($strName) {
-                case "_SaveItem": // Internal only. Do not use. Used by JS above to track selections.
+                case "_Items": // Internal only. Do not use. Used by JS above to track selections.
                     try {
-                        $data = Type::cast($mixValue, Type::STRING);
-                        $this->intSaveItem = $data;
+                        $this->strItems = Type::cast($mixValue, Type::ARRAY_TYPE);
+                        $this->blnModified = true;
                         break;
                     } catch (InvalidCast $objExc) {
-                        $objExc->incrementOffset();
-                        throw $objExc;
-                    }
-
-                case '_SaveItems': // Internal only. Do not use. Used by JS above to track selections.
-
-                    try {
-                        if (is_string($mixValue)) {
-                            $jsonData = json_decode($mixValue, true);
-
-                            if (json_last_error() !== JSON_ERROR_NONE) {
-                                throw new InvalidCast('Invalid JSON in _SaveItems: ' . json_last_error_msg());
-                            }
-                        } elseif (is_array($mixValue)) {
-                            $jsonData = $mixValue;
-                        } else {
-                            throw new InvalidCast('Unsupported type for _SaveItems: ' . gettype($mixValue));
-                        }
-
-                        $this->arySaveItems = Type::cast($jsonData, Type::ARRAY_TYPE);
-                    } catch (InvalidCast $objExc) {
-                        $objExc->incrementOffset();
-                        throw $objExc;
-                    }
-                    break;
-
-                case "_DeleteItem": // Internal only. Do not use. Used by JS above to track selections.
-                    try {
-                        $data = Type::cast($mixValue, Type::STRING);
-                        $this->intDeleteItem = $data;
-                        break;
-                    } catch (InvalidCast $objExc) {
-                        $objExc->incrementOffset();
+                        $objExc->IncrementOffset();
                         throw $objExc;
                     }
                 case "EmptyVideoPath":

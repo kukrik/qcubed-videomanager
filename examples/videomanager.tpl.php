@@ -3,6 +3,12 @@
 <?php
 // https://ckeditor.com/docs/ckeditor4/latest/guide/dev_file_browse_upload.html
 ?>
+<style>
+    code {
+        display: inline-block;
+        width: 11%;
+    }
+</style>
 <script>
     ckConfig = {
         skin: 'moono',
@@ -10,29 +16,45 @@
 </script>
 <?php $this->RenderBegin(); ?>
 
-<div class="instructions" style="margin-bottom: 20px;">
-    <h3>MediaFinder: Implementing the MediaFinder plugin and connecting with FileManager</h3>
+<div class="instructions" style="margin-bottom: 40px;">
+    <h3>VideoEmbed for QCubed-4: Implementing the VideoEmbed Plugin</h3>
+
     <p>
-        How to implement the CKEditor 4 HTML editor, please see examples: <a href="ckeditor.php">ckeditor.php</a>,
-        <a href="ckeditor2.php">ckeditor2.php</a>, and <a href="ckeditor3.php">ckeditor3.php</a>.
+        For information on how to implement the CKEditor 4 HTML editor, please see the following examples:
+        <a href="../../../qcubed-4/plugin-ckeditor/examples/ckeditor.php">ckeditor.php</a>,
+        <a href="../../../qcubed-4/plugin-ckeditor/examples/ckeditor2.php">ckeditor2.php</a>, and
+        <a href="../../qcubed-filemanager/examples/ckeditor3.php">ckeditor3.php</a>.
+        For more convenient usage, you can also refer to
+        <a href="../../qcubed-filemanager/examples/mediafinder.php">mediafinder.php</a>.
     </p>
+
     <p>
-        Integrated here is MediaFinder, visible on the right side of the editor. This plugin allows for a much easier
-        addition of content beyond the introductory image. The plugin is reusable and can be applied, for instance,
-        to articles, news, or anything else.
+        The VideoEmbed plugin is integrated here and is visible on the right side of the editor.
+        This plugin makes it much easier to add rich content beyond an introductory video.
+        It includes an embed sanitization function, <code>cleanEmbedCode()</code>.
+        The plugin is reusable and can be applied to articles, news items, or any other content type.
     </p>
+
     <p>
-        For a better illustration, a simplified table named "example" has been added to the database. This table contains
-        a column called "picture_id," which stores the necessary information.
+        The current example is intentionally simplified and does not include all possible
+        validations or control logic. Implementing such checks is the responsibility of the developer,
+        depending on the specific requirements of the project.
     </p>
+
     <p>
-        The primary plugin, FileHandler, manages files and images site-wide, and MediaFinder utilizes the services
-        of FileHandler. Here are some rules and recommendations that should be taken into serious consideration.
-        Please refer to the comments and suggestions in mediafinder.php for more details.
+        To use the VideoEmbed plugin, you need to add at least two columns to your database table:
+        <code>media_id</code> and <code>video_embed</code>.
+    </p>
+
+    <p>
+        When building application logic, you can combine the editor’s right-side controls with
+        additional selection options such as Image, Video, and others. The possible use cases
+        are flexible and extensible.
     </p>
 </div>
 
-<div class="container">
+
+<div class="container" style="margin-top: 20px;">
     <div class="row">
         <div class="col-md-9"><?= _r($this->txtEditor); ?></div>
         <div class="col-md-3"><?= _r($this->objVideoEmbed); ?></div>
@@ -50,7 +72,7 @@
             <?= _r($this->pnlData); ?>
         </div>
         <div class="col-md-4">
-            <h5><b>The introduction image is placed, for example, on top of the content on the frontend:</b></h5>
+            <h5><b>The introduction videoembed is placed, for example, on top of the content on the frontend:</b></h5>
             <?= _r($this->pnlIntroData); ?>
         </div>
     </div>

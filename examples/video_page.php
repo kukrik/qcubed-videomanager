@@ -11,7 +11,6 @@
     use QCubed\Bootstrap as Bs;
     use QCubed\Exception\Caller;
     use QCubed\Exception\InvalidCast;
-    use QCubed\QDateTime;
     use Random\RandomException;
     use QCubed\Event\Click;
     use QCubed\Action\Ajax;
@@ -86,7 +85,6 @@
 
             $this->createInputs();
             $this->createButtons();
-            $this->createModals();
         }
 
         ///////////////////////////////////////////////////////////////////////////////////////////
@@ -236,39 +234,15 @@
             }
         }
 
-        /**
-         * Creates modals for user interaction, including dialog boxes for displaying warnings or notifications.
-         *
-         * @return void
-         * @throws Caller
-         */
-        public function createModals(): void
-        {
-            ///////////////////////////////////////////////////////////////////////////////////////////
-            // CSRF PROTECTION
-
-            $this->dlgModal1 = new Bs\Modal($this);
-            $this->dlgModal1->Text = t('<p style="margin-top: 15px;">CSRF Token is invalid! The request was aborted.</p>');
-            $this->dlgModal1->Title = t("Warning");
-            $this->dlgModal1->HeaderClasses = 'btn-danger';
-            $this->dlgModal1->addCloseButton(t("I understand"));
-        }
-
         ///////////////////////////////////////////////////////////////////////////////////////////
 
         /**
-         * Handles the click event for the "Embed" button.
+         * Handles the embed button click event, processing the provided embed code, storing it in session data,
+         * updating relevant UI elements, and enabling associated buttons.
          *
-         * This method processes the user's input for embedding a video or media. It verifies the CSRF token,
-         * sanitizes the entered embed code, and updates the session and UI elements accordingly.
-         * If the CSRF token is invalid, a modal dialog box is displayed, and a new token is generated.
-         * It also enables or disables related buttons based on whether an embed code is provided.
-         *
-         * @param ActionParams $params The parameters associated with the button click event, typically including context data.
+         * @param ActionParams $params Parameters associated with the action event, including the context of the button click.
          *
          * @return void
-         * @throws Caller
-         * @throws RandomException
          */
         protected function btnEmbed_Click(ActionParams $params): void
         {
@@ -291,18 +265,12 @@
         }
 
         /**
-         * Handles the click event of the Replace button.
+         * Handles the click event for the "Replace" button. Resets video-related fields, updates UI elements,
+         * and clears session data associated with video information.
          *
-         * This method performs various actions when the Replace button is clicked. It verifies the CSRF token for
-         * security, displays a modal dialog in case of token verification failure, and resets the CSRF token. Upon
-         * successful verification, it executes user-specific options, clears video-related text fields, disables
-         * relevant buttons, executes JavaScript for handling UI changes, and removes session video data if present.
-         *
-         * @param ActionParams $params The parameters associated with the button click action.
+         * @param ActionParams $params Parameters passed along with the button click action.
          *
          * @return void
-         * @throws Caller
-         * @throws RandomException
          */
         protected function btnReplace_Click(ActionParams $params): void
         {
@@ -323,15 +291,17 @@
         ///////////////////////////////////////////////////////////////////////////////////////////
 
         /**
-         * Handles the click event for the insert button. This method verifies the CSRF token, checks activity lock status,
-         * updates file details if applicable, and constructs data to be transmitted back to the parent window.
+         * Handles the click event for the "Save" button.
          *
-         * @param ActionParams $params The parameters passed to the action, typically including request data or form inputs.
+         * This method is responsible for processing and saving video-related data. It determines if a
+         * new video record needs to be created or if an existing video record should be updated.
+         * Once the data is saved, it encodes the relevant parameters into JSON format and triggers
+         * client-side JavaScript to return the data to a parent window. The method also clears
+         * any temporary session data related to the video.
          *
-         * @return void This method does not return a value.
-         * @throws Caller
-         * @throws InvalidCast
-         * @throws RandomException
+         * @param ActionParams $params The parameters associated with the button click action.
+         *
+         * @return void
          */
         public function btnSave_Click(ActionParams $params): void
         {
@@ -356,8 +326,6 @@
 //                $objContentCoverMedia->setStatus(1);
 //                $objContentCoverMedia->setPostDate(QDateTime::now());
 //                $objContentCoverMedia->save();
-//
-//
 //            }
 
 //            $params = [
@@ -367,10 +335,10 @@
 
             $params = [
                 "id" => 1,
-                "embed" => $this->strVideo->Text ?? $_SESSION['video_data']
+                "embed" => $this->strVideo->Text ?? $_SESSION['video_data'],
             ];
 
-            $json = json_encode(
+            $data = json_encode(
                 $params,
                 JSON_UNESCAPED_SLASHES
                 | JSON_UNESCAPED_UNICODE
@@ -380,28 +348,25 @@
                 | JSON_HEX_AMP
             );
 
-
+            // Simulate the user action of selecting a file to be returned to VideoEmbed.
             Application::executeJavaScript(
-                "window.parent.opener.getVideoParams(" . json_encode($json) . "); window.close();"
+                "window.parent.opener.getVideoParams(" . json_encode($data) . "); window.close();"
             );
 
             if (!empty($_SESSION['video_data'])) unset($_SESSION['video_data']);
         }
 
         /**
-         * Handles the onClick event for the Cancel button.
+         * Handles the cancel button click event.
          *
-         * This method performs the following actions when triggered:
-         * - Verifies the CSRF token and shows a modal dialog if the verification fails.
-         * - Resets the CSRF token if verification fails.
-         * - Clears session data associated with video processing if it exists.
-         * - Executes a client-side script to close the current browser window.
+         * This method is triggered when the cancel button is clicked. It performs the following actions:
+         * - Sets the video embed text if a video object is available.
+         * - Clears any session data related to video information.
+         * - Executes a JavaScript command to close the current browser window.
          *
-         * @param ActionParams $params The parameters passed to the action, typically including event data.
+         * @param ActionParams $params The parameters associated with the button click event.
          *
          * @return void
-         * @throws Caller
-         * @throws RandomException
          */
         public function btnCancel_Click(ActionParams $params): void
         {

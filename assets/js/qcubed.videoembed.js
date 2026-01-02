@@ -9,19 +9,8 @@ $.fn.videoEmbed = function (options) {
     const choose_video = document.querySelector(".choose-video");
     const selected_video = document.querySelector(".selected-video");
 
-    if (choose_video) {
-        choose_video.addEventListener("click", function () {
-            launchPopup();
-        });
-    }
-
-    if (selected_video) {
-        selected_video.addEventListener("click", function (evt) {
-            // don't open a popup when delete is clicked
-            if (evt && evt.target && evt.target.closest && evt.target.closest('[data-event="delete"]')) return;
-            launchPopup();
-        });
-    }
+    choose_video.addEventListener("click", launchPopup);
+    selected_video.addEventListener("click", launchPopup);
 
     function launchPopup(url, width, height, settings) {
         width = options.popupWidth || '70%';
