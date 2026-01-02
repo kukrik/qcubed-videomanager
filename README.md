@@ -9,8 +9,9 @@ fully under the developer’s control.
 
 The plugin is intended for use in articles, news items, pages, or any other content type where rich media support is required.
 
-![Image of kukrik](screenshot/videomanager_screenhots_1.jpg?raw=true)
-![Image of kukrik](screenshot/videomanager_screenhots_2.jpg?raw=true)
+![Image of kukrik](screenshot/videomanager_screenhots_1.png?raw=true)
+![Image of kukrik](screenshot/videomanager_screenhots_2.png?raw=true)
+![Image of kukrik](screenshot/videomanager_screenhots_3.png?raw=true)
 
 ---
 
