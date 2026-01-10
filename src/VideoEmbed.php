@@ -202,6 +202,9 @@ $(document).ready(function() {
         console.log(data);
         var id = data.id;
         var embed = data.embed;
+        var title = data.title;
+        var author = data.author;
+        var description = data.description;
 
         if (id && embed) {
             choose_video.classList.add('hidden');

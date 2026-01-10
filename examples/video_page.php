@@ -14,6 +14,7 @@
     use Random\RandomException;
     use QCubed\Event\Click;
     use QCubed\Action\Ajax;
+    use QCubed\QDateTime;
     use QCubed\Action\ActionParams;
     use QCubed\Project\Application;
 
@@ -77,11 +78,9 @@
             parent::formCreate();
 
             $this->intId = Application::instance()->context()->queryStringItem('id');
-            //$this->intGroup = Application::instance()->context()->queryStringItem('group');
+            $this->intGroup = Application::instance()->context()->queryStringItem('group');
 
-            //$this->objVideo = ContentCoverMedia::loadByIdFromPopupId($this->intId);
-
-            $this->objVideo = Example::load($this->intId);
+            $this->objVideo = ContentCoverMedia::loadByIdFromPopupId($this->intId);
 
             $this->createInputs();
             $this->createButtons();
@@ -98,11 +97,11 @@
          *
          * @return void
          */
-//        private function userOptions(): void
-//        {
-//            $this->objUser->setLastActive(QDateTime::now());
-//            $this->objUser->save();
-//        }
+        private function userOptions(): void
+        {
+            $this->objUser->setLastActive(QDateTime::now());
+            $this->objUser->save();
+        }
 
         ///////////////////////////////////////////////////////////////////////////////////////////
 
@@ -178,18 +177,16 @@
             $this->txtAuthor->Placeholder = t('Author');
             $this->txtAuthor->setHtmlAttribute('autocomplete', 'off');
 
-            if (!is_null($this->objVideo->getPictureId())) {
-
-            //if (!is_null($this->objVideo)) {
+            if (!is_null($this->objVideo)) {
                 Application::executeJavaScript("
                     $('.js-video').removeClass('hidden');
                     $('.js-embed-code').addClass('hidden');
                 ");
 
-                //$this->txtTitle->Text = $this->objVideo->getTitle() ?? null;
+                $this->txtTitle->Text = $this->objVideo->getTitle() ?? null;
                 $this->strVideo->Text = $this->objVideo->getVideoEmbed() ?? null;
-                //$this->txtDescription->Text = $this->objVideo->getDescription() ?? null;
-                //$this->txtAuthor->Text = $this->objVideo->getAuthor() ?? null;
+                $this->txtDescription->Text = $this->objVideo->getDescription() ?? null;
+                $this->txtAuthor->Text = $this->objVideo->getAuthor() ?? null;
             }
         }
 
@@ -305,37 +302,35 @@
          */
         public function btnSave_Click(ActionParams $params): void
         {
-//            if (!is_null($this->objVideo)){
-//                $this->objVideo->setVideoEmbed($this->strVideo->Text ?? $_SESSION['video_data']);
-//                $this->objVideo->setTitle($this->txtTitle->Text ?? null);
-//                $this->objVideo->setAuthor($this->txtAuthor->Text ?? null);
-//                $this->objVideo->setDescription($this->txtDescription->Text ?? null);
-//                $this->objVideo->setPostUpdateDate(QDateTime::now());
-//                $this->objVideo->save();
-//            }
-//
-//            if (is_null($this->objVideo)) {
-//                $objContentCoverMedia = new ContentCoverMedia();
-//                $objContentCoverMedia->setContentId($this->intId); // Save the ID of the current page
-//                $objContentCoverMedia->setMenuContentId($this->intGroup); // Save the ID of the current menu tree
-//                $objContentCoverMedia->setMediaTypeId(3);
-//                $objContentCoverMedia->setVideoEmbed($this->strVideo->Text ?? $_SESSION['video_data']);
-//                $objContentCoverMedia->setTitle($this->txtTitle->Text ?? null);
-//                $objContentCoverMedia->setAuthor($this->txtAuthor->Text ?? null);
-//                $objContentCoverMedia->setDescription($this->txtDescription->Text ?? null);
-//                $objContentCoverMedia->setStatus(1);
-//                $objContentCoverMedia->setPostDate(QDateTime::now());
-//                $objContentCoverMedia->save();
-//            }
+            if (!is_null($this->objVideo)){
+                $this->objVideo->setVideoEmbed($this->strVideo->Text ?? $_SESSION['video_data']);
+                $this->objVideo->setTitle($this->txtTitle->Text ?? null);
+                $this->objVideo->setAuthor($this->txtAuthor->Text ?? null);
+                $this->objVideo->setDescription($this->txtDescription->Text ?? null);
+                $this->objVideo->setPostUpdateDate(QDateTime::now());
+                $this->objVideo->save();
+            }
 
-//            $params = [
-//                "id" => $objContentCoverMedia->Id ?? !empty($this->objVideo->getId()),
-//                "embed" => $this->strVideo->Text ?? $_SESSION['video_data']
-//            ];
+            if (is_null($this->objVideo)) {
+                $objContentCoverMedia = new ContentCoverMedia();
+                $objContentCoverMedia->setContentId($this->intId); // Save the ID of the current page
+                $objContentCoverMedia->setMenuContentId($this->intGroup); // Save the ID of the current menu tree
+                $objContentCoverMedia->setMediaTypeId(3);
+                $objContentCoverMedia->setVideoEmbed($this->strVideo->Text ?? $_SESSION['video_data']);
+                $objContentCoverMedia->setTitle($this->txtTitle->Text ?? null);
+                $objContentCoverMedia->setAuthor($this->txtAuthor->Text ?? null);
+                $objContentCoverMedia->setDescription($this->txtDescription->Text ?? null);
+                $objContentCoverMedia->setStatus(1);
+                $objContentCoverMedia->setPostDate(QDateTime::now());
+                $objContentCoverMedia->save();
+            }
 
             $params = [
-                "id" => 1,
+                "id" => $objContentCoverMedia->Id ?? !empty($this->objVideo->getId()),
                 "embed" => $this->strVideo->Text ?? $_SESSION['video_data'],
+                "title" => $this->txtTitle->Text ?? null,
+                "author" => $this->txtAuthor->Text ?? null,
+                "description" => $this->txtDescription->Text ?? null,
             ];
 
             $data = json_encode(
@@ -348,12 +343,14 @@
                 | JSON_HEX_AMP
             );
 
+            if (!empty($_SESSION['video_data'])) unset($_SESSION['video_data']);
+
+            $this->resetInputs();
+
             // Simulate the user action of selecting a file to be returned to VideoEmbed.
             Application::executeJavaScript(
                 "window.parent.opener.getVideoParams(" . json_encode($data) . "); window.close();"
             );
-
-            if (!empty($_SESSION['video_data'])) unset($_SESSION['video_data']);
         }
 
         /**
@@ -374,7 +371,39 @@
 
             if (!empty($_SESSION['video_data'])) unset($_SESSION['video_data']);
 
+            $this->resetInputs();
+
             Application::executeJavaScript("window.close();");
+        }
+
+        /**
+         * Resets all input fields, buttons, and associated states to their initial values.
+         *
+         * This method clears text inputs, resets fields related to video and group properties,
+         * disables specific buttons, and updates the UI by toggling visibility of certain elements
+         * through JavaScript. It also nullifies associated variables for proper state management.
+         *
+         * @return void
+         */
+        public function resetInputs(): void
+        {
+            $this->txtTitle->Text = '';
+            $this->txtEmbedCode->Text = '';
+            $this->strVideo->Text = '';
+            $this->txtDescription->Text = '';
+            $this->txtAuthor->Text = '';
+
+            $this->btnReplace->Enabled = false;
+            $this->btnSave->Enabled = false;
+
+            Application::executeJavaScript("
+                $('.js-video').addClass('hidden');
+                $('.js-embed-code').removeClass('hidden');
+            ");
+
+            $this->intId = null;
+            $this->intGroup = null;
+            $this->objVideo = null;
         }
 
         ///////////////////////////////////////////////////////////////////////////////////////////
